@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Off-Ramp Angler — Urban Fishing Guide to LA &amp; Orange County</title>
+<meta name="description" content="A local, no-subscription fishing guide to 33 urban lakes across LA and Orange County — parking, species, rigs, and pro tips for anglers short on time.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1F4C4A">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Off-Ramp">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --paper:#EFE6D2;
+  --paper-dark:#E4D8BC;
+  --ink:#1B2E2C;
+  --ink-soft:#3E5450;
+  --teal:#1F4C4A;
+  --teal-light:#2E6864;
+  --rust:#C1502E;
+  --rust-dark:#A23E20;
+  --gold:#B5871F;
+  --gold-light:#DDBB55;
+  --lime:#7C9A35;
+  --line:rgba(27,46,44,0.18);
+  --card:#F7F1E1;
+  --white:#FFFDF6;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(27,46,44,0.06) 1px, transparent 0);
+  background-size:22px 22px;
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:'Oswald',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  margin:0;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+button{font-family:'Inter',sans-serif;cursor:pointer;border:none;background:none;}
+a{color:inherit;}
+::selection{background:var(--rust);color:var(--white);}
+
+/* ---------- Layout shell ---------- */
+#app{max-width:1180px;margin:0 auto;padding:0 20px 80px;}
+
+header.top{
+  position:sticky;top:0;z-index:50;
+  background:var(--teal);
+  color:var(--white);
+  border-bottom:4px solid var(--rust);
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+.top-inner{
+  max-width:1180px;margin:0 auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;}
+.brand .hook{
+  width:34px;height:34px;flex:none;
+}
+.brand-text h1{font-size:22px;color:var(--white);line-height:1;}
+.brand-text span{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;color:var(--gold-light);margin-top:3px;text-transform:uppercase;}
+
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+nav.tabs button{
+  font-family:'Oswald',sans-serif;
+  font-size:13px;letter-spacing:0.05em;text-transform:uppercase;
+  color:var(--white);
+  padding:8px 14px;border-radius:3px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  transition:background .15s ease, transform .1s ease;
+}
+nav.tabs button:hover{background:rgba(255,255,255,0.18);}
+nav.tabs button.active{background:var(--rust);border-color:var(--rust);}
+
+.search-wrap{position:relative;display:flex;align-items:center;}
+.search-wrap svg{position:absolute;left:11px;width:14px;height:14px;pointer-events:none;opacity:0.6;}
+#globalSearch{
+  font-family:'Inter',sans-serif;font-size:13px;
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);
+  border-radius:20px;padding:9px 14px 9px 32px;color:var(--white);width:190px;
+  transition:width .18s ease, background .18s ease;
+}
+#globalSearch::placeholder{color:rgba(255,255,255,0.65);}
+#globalSearch:focus{outline:none;width:250px;background:rgba(255,255,255,0.2);}
+.search-clear{position:absolute;right:9px;font-size:15px;color:rgba(255,255,255,0.7);display:none;line-height:1;}
+.search-wrap.has-value .search-clear{display:block;cursor:pointer;}
+.search-results-banner{
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);
+  margin:-6px 0 16px;
+}
+.no-results{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-soft);padding:30px 0;text-align:center;}
+
+/* ---------- Views ---------- */
+.view{display:none;}
+.view.active{display:block;}
+
+.hero{
+  padding:38px 0 18px;
+  display:grid;grid-template-columns:1.1fr 0.9fr;gap:30px;align-items:center;
+}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:26px;}}
+.hero h2{font-size:40px;line-height:1.02;color:var(--teal);}
+.hero h2 em{font-style:normal;color:var(--rust);}
+.hero p{font-size:16px;line-height:1.55;color:var(--ink-soft);max-width:46ch;margin-top:14px;}
+.hero .stats{display:flex;gap:26px;margin-top:22px;flex-wrap:wrap;}
+.hero .stat b{font-family:'Oswald',sans-serif;font-size:28px;color:var(--rust);display:block;}
+.hero .stat span{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-soft);}
+
+.quickpicks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 6px;}
+@media(max-width:760px){.quickpicks{grid-template-columns:1fr;}}
+.qp-card{
+  background:var(--ink);color:var(--white);border-radius:10px;padding:16px 18px;
+  position:relative;overflow:hidden;
+}
+.qp-card .qp-icon{font-size:20px;}
+.qp-card h4{color:var(--gold-light);font-size:13px;letter-spacing:0.06em;margin-top:8px;}
+.qp-card .qp-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+.qp-card .qp-lakes{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.qp-lake-link{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,255,255,0.08);border-radius:5px;padding:8px 10px;font-size:13px;cursor:pointer;
+  transition:background .12s ease;
+}
+.qp-lake-link:hover{background:var(--rust);}
+.qp-lake-link .arrow{opacity:0.6;}
+
+.time-badge{
+  display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-family:'JetBrains Mono',monospace;
+  background:var(--lime);color:var(--white);padding:3px 8px;border-radius:10px;
+}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+
+.license-card{
+  background:var(--white);
+  border:2px solid var(--ink);
+  border-radius:8px;
+  padding:18px 20px;
+  position:relative;
+  box-shadow:6px 6px 0 var(--gold-light);
+}
+.license-card:before{
+  content:"";position:absolute;inset:6px;border:1px dashed var(--line);border-radius:4px;pointer-events:none;
+}
+.license-card .stamp{
+  position:absolute;top:14px;right:16px;
+  border:2px solid var(--rust);color:var(--rust);
+  border-radius:50%;width:64px;height:64px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.05em;text-transform:uppercase;
+  transform:rotate(12deg);line-height:1.1;
+}
+.license-card h4{font-size:11px;letter-spacing:0.14em;color:var(--gold);}
+.license-card p{font-size:13px;color:var(--ink-soft);margin:6px 0 14px;line-height:1.5;}
+.license-card ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink);line-height:1.9;}
+
+/* ---------- Section headers ---------- */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:36px 0 16px;flex-wrap:wrap;}
+.section-head h3{font-size:22px;color:var(--teal);}
+.section-head .sub{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.08em;font-family:'JetBrains Mono',monospace;}
+
+.filter-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-row button{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  padding:7px 13px;border-radius:20px;border:1.5px solid var(--ink);
+  background:transparent;color:var(--ink);
+}
+.filter-row button.active{background:var(--ink);color:var(--white);}
+
+/* ---------- Overview map ---------- */
+.map-wrap{
+  background:var(--white);border:2px solid var(--ink);border-radius:10px;
+  padding:14px;position:relative;overflow:hidden;
+}
+.map-wrap svg{width:100%;height:auto;display:block;}
+.pin{cursor:pointer;}
+.pin circle.body{transition:r .12s ease;}
+.pin:hover circle.body{r:9;}
+.pin text{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:var(--ink);pointer-events:none;}
+.legend{display:flex;gap:18px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;flex-wrap:wrap;}
+.legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+
+/* ---------- Lake cards / lists ---------- */
+.lake-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;}
+.lake-card{
+  background:var(--card);border:1.5px solid var(--ink);border-radius:8px;
+  padding:16px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;
+  position:relative;
+}
+.lake-card:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--gold-light);}
+.lake-card .county-flag{
+  position:absolute;top:14px;right:14px;font-family:'JetBrains Mono',monospace;
+  font-size:10px;padding:2px 8px;border-radius:10px;color:var(--white);
+}
+.lake-card h4{font-size:17px;color:var(--teal);padding-right:60px;}
+.lake-card .city{font-size:12px;color:var(--ink-soft);margin-top:3px;text-transform:none;font-family:'Inter';}
+.lake-card .chips{margin-top:10px;display:flex;gap:5px;flex-wrap:wrap;}
+.chip{font-size:10.5px;font-family:'JetBrains Mono',monospace;background:rgba(31,76,74,0.09);color:var(--teal);padding:3px 8px;border-radius:10px;}
+
+.county-group h3{
+  display:flex;align-items:center;gap:10px;color:var(--white);
+  background:var(--teal);padding:10px 16px;border-radius:6px;font-size:16px;margin-bottom:12px;
+}
+.county-group.oc h3{background:var(--gold);}
+.alpha-jump{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px;}
+.alpha-jump a{
+  font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line);
+  padding:4px 8px;border-radius:4px;color:var(--ink-soft);text-decoration:none;
+}
+.alpha-row{border-top:1px solid var(--line);padding:14px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;}
+.alpha-row:hover .alr-name{color:var(--rust);}
+.alr-letter{font-family:'Oswald',sans-serif;font-size:22px;color:var(--gold);width:30px;flex:none;}
+.alr-name{font-family:'Oswald',sans-serif;font-size:16px;text-transform:uppercase;color:var(--ink);transition:color .1s;}
+.alr-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);text-align:right;}
+
+/* ---------- Lake detail ---------- */
+.back-btn{
+  display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--teal);margin:20px 0 8px;padding:6px 0;
+}
+.back-btn:hover{color:var(--rust);}
+
+.detail-head{
+  background:var(--teal);color:var(--white);border-radius:10px;padding:26px 26px 22px;
+  display:grid;grid-template-columns:1.3fr 0.9fr;gap:24px;position:relative;overflow:hidden;
+}
+@media(max-width:760px){.detail-head{grid-template-columns:1fr;}}
+.detail-head:after{
+  content:"";position:absolute;right:-40px;bottom:-40px;width:180px;height:180px;
+  border-radius:50%;background:rgba(255,255,255,0.05);
+}
+.detail-head .county-tag{
+  display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;
+  padding:3px 10px;border-radius:12px;margin-bottom:10px;
+}
+.detail-head h2{font-size:32px;color:var(--white);}
+.detail-head .city{font-family:'Inter';font-size:14px;color:var(--gold-light);margin-top:4px;}
+.detail-head p.desc{font-size:14px;line-height:1.6;color:rgba(255,255,255,0.88);margin-top:14px;max-width:60ch;}
+.detail-facts{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+.detail-facts div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.15);}
+.detail-facts div:last-child{border-bottom:none;}
+.detail-facts .k{color:var(--gold-light);}
+
+.cta-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:6px;
+  font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;
+  text-decoration:none;
+}
+.btn-primary{background:var(--rust);color:var(--white);}
+.btn-primary:hover{background:var(--rust-dark);}
+.btn-ghost{background:rgba(255,255,255,0.1);color:var(--white);border:1px solid rgba(255,255,255,0.4);}
+.btn-ghost:hover{background:rgba(255,255,255,0.2);}
+
+.detail-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px;}
+@media(max-width:760px){.detail-body{grid-template-columns:1fr;}}
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;}
+.card h4{font-size:14px;color:var(--teal);letter-spacing:0.08em;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.card h4 .num{font-family:'JetBrains Mono',monospace;color:var(--gold);}
+.card.full{grid-column:1/-1;}
+
+.lake-diagram{width:100%;height:auto;border-radius:6px;background:#DCEFE9;border:1px solid var(--line);}
+.spot-list{list-style:none;margin:0;padding:0;}
+.spot-list li{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5;}
+.spot-list li:last-child{border-bottom:none;}
+.spot-list .dotnum{
+  flex:none;width:20px;height:20px;border-radius:50%;background:var(--rust);color:var(--white);
+  font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+
+.species-list{display:flex;flex-wrap:wrap;gap:8px;}
+.species-tag{
+  background:var(--teal);color:var(--white);padding:5px 11px;border-radius:14px;font-size:12.5px;font-family:'JetBrains Mono',monospace;
+}
+.rig-list{list-style:none;margin:10px 0 0;padding:0;}
+.rig-list li{padding:9px 0;border-top:1px solid var(--line);font-size:13px;line-height:1.55;}
+.rig-list b{color:var(--rust);font-family:'Oswald',sans-serif;letter-spacing:0.02em;text-transform:uppercase;font-size:12.5px;}
+
+.tip-box{background:var(--gold-light);border:1.5px solid var(--gold);border-radius:8px;padding:16px 18px;font-size:13.5px;line-height:1.6;}
+.tip-box ul{margin:8px 0 0;padding-left:18px;}
+.tip-box li{margin-bottom:8px;}
+
+.amenity-list{display:flex;flex-wrap:wrap;gap:8px;}
+.amenity-pill{font-size:12.5px;background:var(--paper-dark);border:1px solid var(--line);padding:5px 11px;border-radius:6px;}
+
+.parking-text{font-size:13.5px;line-height:1.6;}
+
+/* ---------- Prep/rules view ---------- */
+.prep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px;}
+.prep-card{background:var(--card);border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;}
+.prep-card h4{color:var(--teal);font-size:15px;margin-bottom:8px;}
+.prep-card p, .prep-card li{font-size:13.5px;line-height:1.6;color:var(--ink);}
+.prep-card ul{padding-left:18px;margin:6px 0 0;}
+
+footer{margin-top:50px;padding-top:20px;border-top:2px solid var(--ink);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);line-height:1.7;}
+</style>
+</head>
+<body>
+<script>
+/* =====================================================================
+   MONITORING CONFIG — fill these in, everything stays silent until you do.
+   ===================================================================== */
+window.OFF_RAMP_ANGLER_CONFIG = {
+  // Paste your GA4 Measurement ID (looks like "G-XXXXXXXXXX") from
+  // analytics.google.com. Leave blank to skip analytics entirely.
+  GA_MEASUREMENT_ID: "",
+
+  // Optional: a URL that receives a POST with {message, source, line, stack}
+  // whenever the app throws an error, so you find out before a reviewer does.
+  // A free option: create a project at sentry.io and use its ingest URL,
+  // or point this at any webhook (e.g. a Google Apps Script or Zapier catch hook).
+  ERROR_WEBHOOK_URL: ""
+};
+
+(function(){
+  const cfg = window.OFF_RAMP_ANGLER_CONFIG;
+
+  // ---- Analytics (GA4), only loads if an ID is set ----
+  if (cfg.GA_MEASUREMENT_ID) {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + cfg.GA_MEASUREMENT_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', cfg.GA_MEASUREMENT_ID);
+  }
+
+  // Call this anywhere to log a usage event (safe no-op if analytics is off)
+  window.trackEvent = function(name, params){
+    if (window.gtag) window.gtag('event', name, params || {});
+  };
+
+  // ---- Error monitoring: logs to console always, POSTs if a webhook is set ----
+  function reportError(payload){
+    console.error("[Off-Ramp Angler error]", payload);
+    if (cfg.ERROR_WEBHOOK_URL) {
+      fetch(cfg.ERROR_WEBHOOK_URL, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(Object.assign({app:"off-ramp-angler", ts:new Date().toISOString()}, payload)),
+        keepalive: true
+      }).catch(()=>{ /* don't let monitoring itself break the app */ });
+    }
+  }
+  window.addEventListener('error', (e)=>{
+    reportError({message:e.message, source:e.filename, line:e.lineno, stack: e.error && e.error.stack});
+  });
+  window.addEventListener('unhandledrejection', (e)=>{
+    reportError({message:"Unhandled promise rejection: " + e.reason});
+  });
+
+  // ---- Install the service worker (offline support + Play Store quality bar) ----
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('service-worker.js').catch((err)=>{
+        console.warn('Service worker registration failed:', err);
+      });
+    });
+  }
+})();
+</script>
+<div id="app">
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand" onclick="showView('home')">
+      <svg class="hook" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19" stroke="#DDBB55" stroke-width="2"/>
+        <path d="M20 9 V22 C20 27 24 29 27 26 C29.5 23.5 28 20 25 20" stroke="#FFFDF6" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <circle cx="20" cy="9" r="2.2" fill="#C1502E"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Off-Ramp Angler</h1>
+        <span>Urban Fishing · LA &amp; Orange County</span>
+      </div>
+    </div>
+    <nav class="tabs">
+      <div class="search-wrap" id="searchWrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="globalSearch" type="text" placeholder="Search a lake, city, or fish…" oninput="onSearchInput(this.value)">
+        <span class="search-clear" onclick="clearSearch()">&times;</span>
+      </div>
+      <button data-tab="home" class="active" onclick="showView('home')">Overview</button>
+      <button data-tab="az" onclick="showView('az')">A–Z</button>
+      <button data-tab="county" onclick="showView('county')">By County</button>
+      <button data-tab="prep" onclick="showView('prep')">Before You Go</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HOME / OVERVIEW ============ -->
+<section id="view-home" class="view active">
+  <div class="hero">
+    <div>
+      <h2>Rod in the trunk, <em>lake by lunch.</em></h2>
+      <p>Fast, no-scroll answers for anglers squeezing in a session between meetings, before dinner, or on the one open hour of a Saturday: where to park, what's biting, and how to rig up before you're even out of the car.</p>
+      <div class="stats">
+        <div class="stat"><b id="statTotal">0</b><span>Lakes covered</span></div>
+        <div class="stat"><b>2</b><span>Counties</span></div>
+        <div class="stat"><b>5</b><span>Common species</span></div>
+      </div>
+    </div>
+    <div class="license-card">
+      <div class="stamp">CDFW<br>Rules<br>Apply</div>
+      <h4>Know Before You Go</h4>
+      <p>Anglers 16 and up need a California sport fishing license everywhere on this list except free-fishing weekends. A handful of lakes (Irvine Lake, Santa Ana River Lakes) are privately run pay-to-fish waters with their own rules — check the "Before You Go" tab for the rundown.</p>
+      <ul>
+        <li>Most lakes get trout in cooler months, catfish in warm months</li>
+        <li>Bag limits &amp; hours vary — posted signage rules</li>
+        <li>Kids 15 &amp; under fish free, year-round</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h3>Got 30 minutes?</h3>
+    <span class="sub">curated for time-crunched anglers</span>
+  </div>
+  <div class="quickpicks" id="quickPicks"></div>
+
+  <div class="section-head">
+    <h3>Regional Map</h3>
+    <span class="sub">tap a pin to open that lake</span>
+  </div>
+  <div class="filter-row" id="mapFilters"></div>
+  <div class="map-wrap">
+    <svg id="regionMap" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#1F4C4A"></span>Los Angeles County</span>
+    <span><span class="dot" style="background:#B5871F"></span>Orange County</span>
+    <span style="color:var(--ink-soft)">Map is schematic — use "Get Directions" on each lake page for exact routing.</span>
+  </div>
+
+  <div class="section-head">
+    <h3>Jump to a lake</h3>
+    <span class="sub" id="homeCount"></span>
+  </div>
+  <div class="lake-grid" id="homeGrid"></div>
+</section>
+
+<!-- ============ A-Z ============ -->
+<section id="view-az" class="view">
+  <div class="section-head"><h3>All Lakes, A–Z</h3><span class="sub" id="azCount"></span></div>
+  <div class="alpha-jump" id="alphaJump"></div>
+  <div id="azList"></div>
+</section>
+
+<!-- ============ BY COUNTY ============ -->
+<section id="view-county" class="view">
+  <div class="section-head"><h3>By County</h3></div>
+  <div class="county-group" id="groupLA">
+    <h3>Los Angeles County</h3>
+    <div class="lake-grid" id="gridLA"></div>
+  </div>
+  <div class="county-group oc" id="groupOC" style="margin-top:34px;">
+    <h3>Orange County</h3>
+    <div class="lake-grid" id="gridOC"></div>
+  </div>
+</section>
+
+<!-- ============ BEFORE YOU GO ============ -->
+<section id="view-prep" class="view">
+  <div class="section-head"><h3>Before You Go</h3><span class="sub">gear, rules, family tips</span></div>
+  <div class="prep-grid">
+    <div class="prep-card">
+      <h4>License &amp; Limits</h4>
+      <p>Anyone 16 or older needs a California sport fishing license to fish public waters, available online at CDFW's licensing site or at most sporting goods stores. Kids 15 and under fish free, always. Two "Free Fishing Days" each year waive the license requirement for everyone.</p>
+    </div>
+    <div class="prep-card">
+      <h4>Public vs. Private Water</h4>
+      <p>Most lakes on this list are city or county park lakes stocked by CDFW's Fishing in the City program — free to fish with a license. A few big draws like Irvine Lake and the Santa Ana River Lakes are privately operated and charge a day-use or rod fee, with their own posted rules and hours.</p>
+    </div>
+    <div class="prep-card">
+      <h4>Core Tackle Kit</h4>
+      <ul>
+        <li>4–8 lb line for trout/panfish, 10–15 lb for catfish and bass</li>
+        <li>Small split shots, size 8–12 hooks for bait, size 1–4 for catfish</li>
+        <li>Bobbers/floats, a few small swivels</li>
+        <li>PowerBait or nightcrawlers (trout), chicken liver or mackerel (catfish), plastic worms (bass)</li>
+      </ul>
+    </div>
+    <div class="prep-card">
+      <h4>Family-Day Basics</h4>
+      <ul>
+        <li>Shade, sunscreen, and refillable water — most of these lakes have little natural shade on open banks</li>
+        <li>Arrive at opening or an hour before dusk; midday summer heat is slow for everything but catfish</li>
+        <li>Bathrooms and paved paths at nearly every lake make these strong picks for strollers and younger kids</li>
+        <li>Always check current closures and stocking schedules — conditions change with drought and maintenance</li>
+      </ul>
+    </div>
+    <div class="prep-card">
+      <h4>Handling &amp; Ethics</h4>
+      <ul>
+        <li>Wet your hands before handling fish you plan to release</li>
+        <li>Pack out all line, hooks, and bait containers — wildlife gets tangled in loose line</li>
+        <li>Respect posted bag limits and any lake-specific gear restrictions (some ban treble hooks or live minnows)</li>
+      </ul>
+    </div>
+    <div class="prep-card">
+      <h4>Stocking Windows</h4>
+      <p>Across almost every lake here, trout go in from roughly late October/November through March when the water is cool, and catfish go in from spring through early fall when it's warm. Fishing is nearly always best in the day or two right after a truck stocks a lake — check CDFW's fish planting schedule before you head out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LAKE DETAIL ============ -->
+<section id="view-detail" class="view">
+  <a class="back-btn" onclick="showView(lastListView||'home')">&#8592; Back to list</a>
+  <div id="detailContent"></div>
+</section>
+
+<footer>
+  Off-Ramp Angler is an independent fan-made guide. Stocking schedules, hours, and access rules change — always verify current conditions with CDFW's Fishing in the City program (wildlife.ca.gov) or the operating park/city before you head out. Not affiliated with CDFW or any city parks department.
+</footer>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const LAKES = [
+{
+  id:"echo-park", name:"Echo Park Lake", county:"LA", city:"Los Angeles",
+  lat:34.076, lon:-118.261, acreage:"29 acres",
+  desc:"A palm-ringed lake a few blocks from Dodger Stadium, with a walking path around the whole shoreline and the downtown skyline as a backdrop. One of the most scenic — and most fished — urban lakes in the city.",
+  species:["Rainbow trout","Largemouth bass","Bluegill","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait on a size 14–16 hook, 12–18\" above a small split shot so it drifts just off bottom. Fish it soon after a stocking truck comes through."},
+    {s:"Catfish/Carp", r:"Simple bottom rig — sliding sinker above a swivel, size 4 hook baited with nightcrawler or dough bait, cast toward open water and let it sit."},
+    {s:"Bass/Bluegill", r:"Small plastic worm or a worm-and-bobber rig worked along the tule edges and under the footbridge."}
+  ],
+  spots:[
+    "The footbridge and lotus-bed area on the north side — structure and shade concentrate fish",
+    "Open banks near the boathouse right after a trout stocking, when trucks typically dump near accessible shoreline",
+    "Early morning or last hour of daylight; midday foot traffic around the path pushes fish out"
+  ],
+  amenities:["Paved walking path","Restrooms","Pedal boat rentals","Picnic tables","Playground","Lotus Festival grounds"],
+  parking:"Metered street parking surrounds the park on Echo Park Ave and Glendale Blvd; a small pay lot sits off Glendale Blvd near the boathouse. Expect it to fill on weekends — arrive early.",
+  tips:[
+    "This lake gets heavy foot traffic — a stocking day (check CDFW's planting schedule) is worth timing your trip around.",
+    "Metro's B Line Vermont/Sunset stop is a 15–minute walk if you'd rather skip parking entirely.",
+    "Good, easy pick for a first fishing trip with kids thanks to the paved loop and nearby restrooms."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring/fall"
+},
+{
+  id:"macarthur-park", name:"MacArthur Park Lake", county:"LA", city:"Los Angeles",
+  lat:34.058, lon:-118.278, acreage:"about 9 acres",
+  desc:"A historic city lake in the dense Westlake neighborhood, split by Wilshire Blvd, with a straightforward paved perimeter for bank fishing.",
+  species:["Rainbow trout","Channel catfish","Carp"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig (PowerBait or a garlic-scented dough bait) fished a foot or two off bottom, light 4–6 lb line."},
+    {s:"Catfish", r:"Carolina-style sliding sinker rig with cut mackerel or chicken liver, cast out and left on bottom, ideally at dusk."}
+  ],
+  spots:[
+    "Banks near the Wilshire Blvd bridge, where the lake narrows and fish tend to funnel through",
+    "Either side away from the busiest walking paths for less pressured water"
+  ],
+  amenities:["Paved perimeter path","Restrooms","Picnic areas","Playground"],
+  parking:"Street parking along Alvarado St and Wilshire Blvd; a Metro Purple/Red Line stop (MacArthur Park) sits right at the lake's edge, which is often the easiest option in this neighborhood.",
+  tips:[
+    "It's an urban park in a busy part of the city — go earlier in the day, stick to open sightlines, and keep gear close.",
+    "Bring your own shade; there's limited tree cover directly on the water.",
+    "Trout bite is short-lived after each stocking in this well-fished lake — try to fish within a day or two of a plant."
+  ],
+  stocking:"Trout: late fall–winter (roughly monthly) · Catfish: spring &amp; fall"
+},
+{
+  id:"lincoln-park", name:"Lincoln Park Lake", county:"LA", city:"Los Angeles",
+  lat:34.067, lon:-118.201, acreage:"small neighborhood lake",
+  desc:"A quiet, low-key lake in a classic Eastside neighborhood park — less crowded than the bigger downtown-adjacent lakes.",
+  species:["Rainbow trout","Largemouth bass","Bluegill","Carp","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Small inline spinner (Rooster Tail style) or a suspended PowerBait rig — both work well in this smaller water."},
+    {s:"Bass/Bluegill", r:"Worm-and-bobber near any shoreline brush or shade for panfish; a plastic worm along drop-offs for bass."}
+  ],
+  spots:[
+    "Shaded coves away from the recreation center side, which sees the most foot traffic",
+    "Any visible aeration or inflow point — moving, oxygenated water holds fish in warm months"
+  ],
+  amenities:["Recreation center","Senior center","Baseball diamond","Picnic area","Playground","Barbecue pits"],
+  parking:"Free lot at the Lincoln Park Recreation Center off Mission Rd, plus street parking around the park.",
+  tips:[
+    "One of the calmer lakes on this list — a solid choice if you want elbow room on a weekend.",
+    "Because it's smaller, it clears out fast after a stocking; go the same day if you can."
+  ],
+  stocking:"Trout: fall–winter (variable by year) · Catfish: warmer months"
+},
+{
+  id:"hollenbeck-park", name:"Hollenbeck Park Lake", county:"LA", city:"Los Angeles",
+  lat:34.040, lon:-118.213, acreage:"small neighborhood lake",
+  desc:"A compact lake in Boyle Heights right alongside the 5 Freeway, with basketball courts and picnic space around it.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Largemouth bass","Carp"],
+  rigs:[
+    {s:"Trout", r:"Floating dough bait or a small spoon, fished slow near any deeper pockets."},
+    {s:"Catfish", r:"Bottom rig with liver or nightcrawler, fished into the evening."}
+  ],
+  spots:[
+    "The side furthest from S. St. Louis St., away from the basketball courts, for quieter water",
+    "Corners where the bank curves — slightly deeper water tends to hold fish longer after a stock"
+  ],
+  amenities:["Basketball courts","Barbecue pits","Picnic areas","Playground"],
+  parking:"Free street parking around the park; it's a small, low-traffic lot area so spots are usually easy to find outside weekend derbies.",
+  tips:[
+    "A good backup lake when Echo Park or MacArthur Park are too crowded.",
+    "Freeway noise is constant here — bring the family expecting an urban, not scenic, outing."
+  ],
+  stocking:"Trout: winter · Catfish: spring"
+},
+{
+  id:"kenneth-hahn", name:"Kenneth Hahn SRA Lake", county:"LA", city:"Los Angeles (Baldwin Hills)",
+  lat:34.012, lon:-118.372, acreage:"small park lake",
+  desc:"A small lake tucked into the hills of Kenneth Hahn State Recreation Area, with genuinely nice views over the city and more green space around it than most urban lakes on this list.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Largemouth bass"],
+  rigs:[
+    {s:"Trout", r:"Standard bait rig — small hook, PowerBait or garlic-scented dough, floated just off bottom with light line."},
+    {s:"Catfish/Bass", r:"Nightcrawler on a slip-sinker rig near any submerged brush for catfish; a plastic worm or small crankbait along the edges for bass."}
+  ],
+  spots:[
+    "The far bank from the main parking area sees noticeably less pressure",
+    "Morning fishing pairs well with the park's hiking trails if you want to make a half-day of it"
+  ],
+  amenities:["Hiking trails","Picnic areas","Playgrounds","Ball fields","Basketball courts"],
+  parking:"Free park lot off La Cienega Blvd; fills up on weekends since it's shared with hikers, so a weekday or early start helps.",
+  tips:[
+    "This is as much a hiking park as a fishing lake — worth combining with a short trail walk.",
+    "Great sunset views over the city if you fish the last hour before the park closes."
+  ],
+  stocking:"Trout: fall–winter · Catfish: late spring–summer"
+},
+{
+  id:"legg-lakes", name:"Legg Lakes (Whittier Narrows)", county:"LA", city:"South El Monte",
+  lat:34.033, lon:-118.059, acreage:"three connected lakes",
+  desc:"Three interlinked lakes inside Whittier Narrows Recreation Area — one of the biggest stretches of shoreline access on this whole list, with room to walk to a quieter spot if the first bank is crowded.",
+  species:["Rainbow trout","Channel catfish","Largemouth bass","Bluegill","Crappie"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig or a small spinner worked along the connecting channels between lakes, where current keeps water moving."},
+    {s:"Catfish", r:"Chicken liver or mackerel on a bottom rig fished into the evening, especially in the deeper northern lake."},
+    {s:"Crappie/Bluegill", r:"Small jig or a worm under a bobber near any brush piles or tules."}
+  ],
+  spots:[
+    "The narrow channels connecting the three lakes — current funnels baitfish and holds trout after a stock",
+    "North Legg Lake tends to be a bit deeper and is worth trying for catfish and crappie",
+    "Bike paths circle the whole complex, so you can scout multiple banks in one visit"
+  ],
+  amenities:["Bike paths","Picnic areas","Ball fields","Bait/tackle nearby","Restrooms"],
+  parking:"Large free lots off Durfee Ave and Santa Anita Ave inside the recreation area — the most parking of any lake on this list.",
+  tips:[
+    "Space it out: with three lakes and long shorelines, walk a bit past the first parking area to find less-pressured water.",
+    "This is a regular CDFW Fishing in the City derby site — worth checking their events calendar if you want a guided family day."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring &amp; fall"
+},
+{
+  id:"el-dorado", name:"El Dorado Park Lakes", county:"LA", city:"Long Beach",
+  lat:33.810, lon:-118.088, acreage:"multiple connected lakes",
+  desc:"A cluster of lakes inside El Dorado East Regional Park, bordered by a nature center and hiking trails — one of the more scenic, tree-lined options in the South Bay/Long Beach area.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Crappie","Largemouth bass","Redear sunfish","Carp"],
+  rigs:[
+    {s:"Trout", r:"Small floating bait rig or a light inline spinner, fished close to the bank right after a stock."},
+    {s:"Catfish", r:"Sliding sinker rig with cut bait or liver, cast to deeper pockets away from the swimming/boating areas."},
+    {s:"Panfish", r:"Redworm under a small bobber near any submerged structure — this lake's redear and bluegill respond well to it."}
+  ],
+  spots:[
+    "Banks near the nature center tend to be quieter and shadier",
+    "Wherever the lakes narrow between sections — current and structure concentrate fish"
+  ],
+  amenities:["Nature center","Hiking trails","Picnic areas","Playgrounds","Barbecues"],
+  parking:"Paid park entry lot (small daily fee per vehicle) off Spring St / Studebaker Rd — plan for that cost, unlike most free lakes on this list.",
+  tips:[
+    "Because there's a daily park entrance fee, it's worth combining your trip with the nature center or trails to get more out of the visit.",
+    "One of the better bets in LA County for redear sunfish, an often-overlooked panfish that fights hard for its size."
+  ],
+  stocking:"Trout: late fall–winter (multiple plants) · Catfish: spring &amp; fall"
+},
+{
+  id:"peck-road", name:"Peck Road Park Lake", county:"LA", city:"Arcadia / El Monte",
+  lat:34.101, lon:-118.013, acreage:"Peck Road Water Conservation Park",
+  desc:"A flood-control basin turned park lake, ringed by trails and open green space, in the San Gabriel Valley.",
+  species:["Largemouth bass","Channel catfish","Bluegill"],
+  rigs:[
+    {s:"Bass", r:"Plastic worm or crankbait worked along any rocky or brushy edge."},
+    {s:"Catfish", r:"Nightcrawler or cut bait on a simple bottom rig, fished toward evening."}
+  ],
+  spots:[
+    "The trail loop lets you scout the whole lake before committing to a spot — walk it once first",
+    "Shaded coves on the north side stay cooler through summer afternoons"
+  ],
+  amenities:["Walking/biking trails","Picnic tables","Open lawn areas"],
+  parking:"Free lot off Peck Rd near the park entrance.",
+  tips:[
+    "This lake leans more toward bass and catfish than trout — plan tackle accordingly.",
+    "A good pick for a bike-and-fish combo day given the trail network around the water."
+  ],
+  stocking:"Primarily a warmwater fishery; check current CDFW schedule for any seasonal trout plants"
+},
+{
+  id:"puddingstone", name:"Puddingstone Lake", county:"LA", city:"San Dimas",
+  lat:34.093, lon:-117.813, acreage:"250 acres",
+  desc:"Easily the biggest lake on the LA County list — a full reservoir inside Frank G. Bonelli Regional Park with camping, sailing, and jet-skiing alongside the fishing.",
+  species:["Rainbow trout","Largemouth bass","Channel catfish","Bluegill","Carp"],
+  rigs:[
+    {s:"Trout", r:"PowerBait or nightcrawler bait rig off any bank in winter; small spoons and spinners also work well in this bigger water."},
+    {s:"Bass", r:"Crankbaits or plastic worms worked along rocky points and coves, away from the powerboat zones."},
+    {s:"Catfish", r:"Cut bait or chicken liver on a heavier bottom rig — this lake holds some larger catfish given its size."}
+  ],
+  spots:[
+    "Quieter coves away from the main boat ramp and swim beach, especially on the north and east shorelines",
+    "Fish this one in the cooler months — from late spring through summer, powerboat and jet-ski traffic takes over and fishing takes a back seat"
+  ],
+  amenities:["Camping","Boat launch","Swim beach","Picnic areas","Bait shop on-site"],
+  parking:"Paid park entrance fee (per vehicle) at Bonelli Regional Park gates off Raging Waters Dr — budget extra time on busy weekends.",
+  tips:[
+    "Time your trip for a weekday or the off-season; summer weekends belong to the boaters, not the bank anglers.",
+    "Because it's a full-size reservoir, water levels and shoreline access shift with drought conditions — check current status before a longer drive out."
+  ],
+  stocking:"Trout: winter · Catfish: spring"
+},
+{
+  id:"hansen-dam", name:"Hansen Dam Lake", county:"LA", city:"Lake View Terrace",
+  lat:34.260, lon:-118.385, acreage:"Hansen Dam Recreation Area",
+  desc:"A flood-control lake in the northeast San Fernando Valley, part of a large recreation area with a skate park and sports complex around it.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Largemouth bass","Carp"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig fished off the more open banks right after a plant."},
+    {s:"Catfish", r:"Bottom rig with liver or nightcrawler, fished into dusk when it's warm."}
+  ],
+  spots:[
+    "Open shoreline away from the swim/boat area draws less pressure",
+    "Try both the fall trout window and the spring/summer catfish window — this lake is stocked with both fairly reliably"
+  ],
+  amenities:["Skate park","Bike trail","Sports center","Picnic areas","Playground"],
+  parking:"Free lots off Dronfield Ave / Foothill Blvd inside the recreation area.",
+  tips:[
+    "Combine a fishing morning with the skate park or bike trail if you've got restless kids in tow.",
+    "One of the more reliably-stocked Valley lakes for both trout and catfish."
+  ],
+  stocking:"Trout: fall–winter · Catfish: spring–summer"
+},
+{
+  id:"la-mirada", name:"La Mirada Lake", county:"LA", city:"La Mirada",
+  lat:33.904, lon:-118.007, acreage:"La Mirada Regional Park",
+  desc:"A neighborhood lake inside La Mirada Regional Park, with disc golf and tennis courts nearby — a solid, low-key pick near the LA/Orange County line.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Crappie","Largemouth bass","Carp"],
+  rigs:[
+    {s:"Trout", r:"Standard floating PowerBait rig, light line, fished close to the bank."},
+    {s:"Crappie/Bluegill", r:"Small jig or worm-and-bobber near any shaded structure."}
+  ],
+  spots:[
+    "Corners of the lake away from the disc golf course tend to be quieter",
+    "Fish soon after a stock — this is a popular, well-fished neighborhood spot"
+  ],
+  amenities:["Disc golf course","Tennis and handball courts","Playgrounds","Picnic tables"],
+  parking:"Free lot off Adelfa Dr at the park entrance.",
+  tips:[
+    "Hosts an annual youth fishing derby (CDFW Fishing in the City) — a great low-pressure intro event if the dates line up with your visit.",
+    "Handy option if you're anywhere near the 5 Freeway/Orange County border."
+  ],
+  stocking:"Trout: cooler months · Catfish: warmer months"
+},
+{
+  id:"alondra-park", name:"Alondra Park Lake", county:"LA", city:"Lawndale",
+  lat:33.886, lon:-118.342, acreage:"14 acres",
+  desc:"A South Bay neighborhood lake with a good mix of warmwater fish year-round, not just seasonal trout.",
+  species:["Channel catfish","Largemouth bass","Common carp","Rainbow trout"],
+  rigs:[
+    {s:"Bass/Catfish", r:"Plastic worm along the edges for bass; nightcrawler or cut bait on a bottom rig for catfish — both work most of the year here."},
+    {s:"Trout (winter)", r:"Floating bait rig when the lake is stocked in the cooler months."}
+  ],
+  spots:[
+    "Any shaded bank away from the golf course side of the park",
+    "Early morning tends to be most productive for bass here"
+  ],
+  amenities:["Golf course nearby","Picnic areas","Playground","Walking paths"],
+  parking:"Free street parking and small lots around the park off Prairie Ave.",
+  tips:[
+    "Good year-round option since it holds resident bass, carp, and catfish even outside the trout-stocking window.",
+    "Less crowded than the bigger-name LA lakes — a solid weekday pick."
+  ],
+  stocking:"Trout: late fall–winter · warmwater species available year-round"
+},
+
+/* ---------------- ORANGE COUNTY ---------------- */
+{
+  id:"irvine-lake", name:"Irvine Lake", county:"OC", city:"Orange (Silverado Canyon area)",
+  lat:33.766, lon:-117.717, acreage:"700+ acres",
+  desc:"Orange County's biggest fishing lake by far — a privately operated reservoir in the foothills east of Tustin, with special hours and rules of its own. Worth the drive if you want more room and bigger fish than the neighborhood park lakes.",
+  species:["Rainbow trout","Channel catfish","Largemouth bass","Bluegill","Crappie","Carp","Sturgeon"],
+  rigs:[
+    {s:"Trout", r:"PowerBait or nightcrawler bait rig from shore during the December–March plants; trolling small spoons works well if you have a boat."},
+    {s:"Catfish", r:"Heavier bottom rig with mackerel or chicken liver — this lake is stocked with catfish each summer and fishes well into fall."},
+    {s:"Sturgeon (occasional)", r:"Heavy tackle with cut bait on bottom; check current lake rules, as sturgeon fishing here has special regulations."}
+  ],
+  spots:[
+    "Fish close to a fresh stocking — trout success drops off quickly as the lake warms and gets fished",
+    "Coves away from the main dock and day-use area for less pressured water"
+  ],
+  amenities:["Bait &amp; tackle shop","Boat rentals","Snack bar","Restrooms","Designated fishing hours"],
+  parking:"Paid entrance/day-use fee required (private lake); on-site parking lot included with entry.",
+  tips:[
+    "This is a private, pay-to-fish lake with its own posted hours and rules — check the lake's website before you drive out, as they differ from the free city park lakes.",
+    "Best bang for your buck is timing a visit right after a trout plant, typically December through early March."
+  ],
+  stocking:"Trout: December–March · Catfish: summer"
+},
+{
+  id:"irvine-regional", name:"Irvine Regional Park Lake", county:"OC", city:"Orange",
+  lat:33.807, lon:-117.759, acreage:"small park lake",
+  desc:"A small, family-friendly lake inside one of Orange County's oldest regional parks, with horseback trails, paddle boat rentals, and shaded picnic groves around it.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Small floating bait rig fished from the shaded banks near the boat rental dock."},
+    {s:"Catfish", r:"Simple bottom rig with cut bait or liver during the summer stock."}
+  ],
+  spots:[
+    "Banks near the boathouse tend to get stocked fish first",
+    "The far side of the lake, away from paddle boat traffic, if you want quieter water"
+  ],
+  amenities:["Paddle boat rentals","Horseback riding","Picnic groves","Zoo nearby","Restrooms"],
+  parking:"Paid park entrance fee per vehicle at the Irvine Regional Park gate off Jamboree Rd / Santiago Canyon Rd.",
+  tips:[
+    "Easy to turn into a full family day — the park also has a small zoo and horse rentals.",
+    "Good shade cover here compared to most OC lakes, which helps on hot afternoons."
+  ],
+  stocking:"Trout: winter (multiple plants) · Catfish: summer"
+},
+{
+  id:"yorba-regional", name:"Yorba Regional Park Lake", county:"OC", city:"Anaheim",
+  lat:33.873, lon:-117.767, acreage:"regional park lake system",
+  desc:"A string of lakes and lagoons along the Santa Ana River bike trail in Anaheim Hills, popular with both anglers and cyclists passing through.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Carp"],
+  rigs:[
+    {s:"Trout", r:"Standard floating PowerBait rig; small spinners also work along the connecting channels."},
+    {s:"Catfish/Panfish", r:"Bottom rig with bait for catfish; worm-and-bobber near reeds for bluegill."}
+  ],
+  spots:[
+    "The channels linking the separate lake sections often hold fish moving between them",
+    "Quieter coves set back from the bike trail"
+  ],
+  amenities:["Bike trail access","Picnic shelters","Playgrounds","Restrooms"],
+  parking:"Small parking fee per vehicle at park lots off La Palma Ave.",
+  tips:[
+    "Combine with a ride on the Santa Ana River Trail if anyone in your group bikes.",
+    "Multiple connected sections mean you can move to a new spot without leaving the park if the first bank is slow."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring–fall"
+},
+{
+  id:"laguna-niguel", name:"Laguna Niguel Regional Park Lake", county:"OC", city:"Laguna Niguel",
+  lat:33.527, lon:-117.700, acreage:"44 acres",
+  desc:"One of the most consistently stocked and productive lakes in Orange County, set in a large regional park in South County — formerly known as Sulphur Creek Reservoir.",
+  species:["Rainbow trout","Channel catfish","Blue catfish","Largemouth bass","Bluegill","Crappie","Carp"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig or small spoon, fished soon after a plant for the best odds."},
+    {s:"Catfish", r:"Heavier bottom rig with cut bait — this lake has produced some notably large blue catfish alongside the usual channel cats."},
+    {s:"Bass", r:"Plastic worm or spinnerbait worked along the dam face and any rocky structure."}
+  ],
+  spots:[
+    "Near the dam, where deeper water tends to hold bigger catfish and bass",
+    "Open banks close to the main parking area right after a stocking truck visits"
+  ],
+  amenities:["Picnic shelters","Playgrounds","Sports fields","Restrooms","Trails"],
+  parking:"Paid park entrance fee per vehicle at the Laguna Niguel Regional Park gate off La Paz Rd / Alicia Pkwy.",
+  tips:[
+    "Widely considered one of OC's best all-around bets — stocked often and known for occasional trophy-sized catfish.",
+    "Bring a net if you're targeting the bigger catfish here; it's not unusual to hook something heavier than expected."
+  ],
+  stocking:"Trout: frequent winter plants · Catfish: spring, summer &amp; fall"
+},
+{
+  id:"mile-square", name:"Mile Square Park Lake", county:"OC", city:"Fountain Valley",
+  lat:33.704, lon:-117.936, acreage:"20 acres",
+  desc:"A large, flat, day-use park lake in central Orange County, easy to reach and easy to fish with wide-open banks.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait or nightcrawler rig, fished from any open bank after a cool-season plant."},
+    {s:"Catfish", r:"Bottom rig with cut bait, fished into the evening during the warm months."}
+  ],
+  spots:[
+    "Open shoreline is fairly uniform here — moving a short distance from the main parking area usually finds less-pressured water",
+    "Early morning or evening beats the midday sun on this shade-light lake"
+  ],
+  amenities:["Golf course nearby","Archery range","Picnic areas","Wide paved paths"],
+  parking:"Free and paid lots inside the park off Euclid St / Warner Ave — arrives easily from most of central OC.",
+  tips:[
+    "One of the flattest, most stroller/wheelchair-accessible lakes on this list.",
+    "Bring your own shade (umbrella or pop-up) since tree cover is limited directly on the water."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: late winter–early spring"
+},
+{
+  id:"eisenhower", name:"Eisenhower Park Lake", county:"OC", city:"Orange",
+  lat:33.807, lon:-117.836, acreage:"16 acres",
+  desc:"A neighborhood lake just west of Orange Hills, popular with local trout anglers each winter.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig, light line, fished right after a winter stock."},
+    {s:"Catfish", r:"Bottom rig with liver or cut bait during the early spring plant."}
+  ],
+  spots:[
+    "Banks closest to the parking area typically see the first wave of stocked fish",
+    "Try the quieter far side of the lake if the near bank is crowded on a stocking weekend"
+  ],
+  amenities:["Picnic areas","Playground","Sports courts"],
+  parking:"Free street and lot parking off Tustin St in the north part of Orange.",
+  tips:[
+    "A dependable, lower-key trout lake — good option when the bigger-name South County lakes are crowded.",
+    "Check for multiple plants through the season; OC lakes are often restocked more than once per winter if trout supply allows."
+  ],
+  stocking:"Trout: late fall–winter (possible multiple plants) · Catfish: early spring"
+},
+{
+  id:"huntington-central", name:"Huntington Central Park Lake", county:"OC", city:"Huntington Beach",
+  lat:33.694, lon:-117.996, acreage:"central park lake",
+  desc:"A lake inside Huntington Beach's large Central Park, with a broader mix of warmwater species than most OC park lakes, plus the usual seasonal trout.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Crappie","Carp","Largemouth bass (occasional)"],
+  rigs:[
+    {s:"Trout", r:"Standard floating bait rig, fished soon after a late fall/winter plant."},
+    {s:"Panfish", r:"Worm-and-bobber near any structure for bluegill and crappie — this lake holds a solid resident population."},
+    {s:"Bass", r:"Don't expect a trophy fishery, but a plastic worm along the edges can produce an occasional largemouth."}
+  ],
+  spots:[
+    "Structure-heavy banks (docks, brush, drop-offs) hold panfish consistently, even outside stocking season",
+    "Open water near the main path for trout right after a plant"
+  ],
+  amenities:["Extensive park trails","Sports complex","Picnic areas","Restrooms","Playgrounds"],
+  parking:"Free lots throughout Huntington Central Park off Golden West St / Slater Ave.",
+  tips:[
+    "This is a good year-round pick, not just a stocking-season lake, thanks to its resident panfish population.",
+    "Central Park is huge — leave time to explore beyond just the lake if you're making a day of it."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: as conditions allow"
+},
+{
+  id:"carbon-canyon", name:"Carbon Canyon Regional Park Lake", county:"OC", city:"Brea",
+  lat:33.917, lon:-117.795, acreage:"small park lake",
+  desc:"A small lake in a canyon park east of Brea, with picnic and hiking options wrapped around it — a quieter, more wooded feel than most flatland OC lakes.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig, fished from the shadier canyon-side banks."},
+    {s:"Catfish", r:"Bottom rig with cut bait or liver during the warm-season plant."}
+  ],
+  spots:[
+    "Shaded banks on the canyon side stay cooler and more comfortable in summer",
+    "Fish close to a fresh stock — this smaller lake gets picked over quickly"
+  ],
+  amenities:["Hiking trails","Picnic areas","Sports fields"],
+  parking:"Paid park entrance fee per vehicle off Carbon Canyon Rd (Hwy 142).",
+  tips:[
+    "More shade and a quieter, canyon feel compared to most OC park lakes — nice pick on a hot day.",
+    "Combine with a short hike on the surrounding trails."
+  ],
+  stocking:"Trout: fall–winter · Catfish: warm months"
+},
+{
+  id:"centennial", name:"Centennial Lake", county:"OC", city:"Santa Ana",
+  lat:33.735, lon:-117.870, acreage:"10 acres",
+  desc:"A flat, grassy lake in Centennial Regional Park, with wide open day-use lawns around the water.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig fished from the open lawn banks after a winter stock."},
+    {s:"Catfish", r:"Bottom rig with liver or cut bait as the weather warms."}
+  ],
+  spots:[
+    "Open, flat banks make this an easy lake to fish from a beach chair with kids",
+    "Move around the perimeter if one section has been fished hard after a stock"
+  ],
+  amenities:["Open lawns","Sports fields","Picnic tables","Playground"],
+  parking:"Free lot off Edinger Ave near Fairview St.",
+  tips:[
+    "Very open and flat — good for younger kids and easy casting, but bring your own shade.",
+    "A dependable, low-drama trout lake without the crowds of the bigger South County parks."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring warm-up"
+},
+{
+  id:"laguna-lake-fullerton", name:"Laguna Lake", county:"OC", city:"Fullerton",
+  lat:33.883, lon:-117.884, acreage:"neighborhood lake",
+  desc:"A quiet neighborhood lake tucked into a residential pocket of northern Fullerton, with shoreline access along two streets and a walking trail on the southeast bank.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig fished from Lakeview or Lakeside Dr banks during the cool-season plant."},
+    {s:"Catfish", r:"Simple bottom rig with cut bait as the weather warms."}
+  ],
+  spots:[
+    "Access along Lakeview Dr and Lakeside Dr gives multiple bank options to spread out",
+    "The trail on the southeast bank is a good option if the street-side banks are busy"
+  ],
+  amenities:["Neighborhood walking trail","Street-side shoreline access"],
+  parking:"Street parking along Lakeview Dr and Lakeside Dr — this is a residential-area lake, so be mindful of posted parking rules.",
+  tips:[
+    "A true neighborhood sleeper spot — light crowds most days outside of a fresh stocking.",
+    "Because parking is street-only in a residential area, keep noise and trash to a minimum out of respect for neighbors."
+  ],
+  stocking:"Trout: occasional cool-season plants · Catfish: warm months"
+},
+
+/* ---------------- SMALLER / NEIGHBORHOOD LAKES ---------------- */
+{
+  id:"belvedere", name:"Belvedere Lake", county:"LA", city:"East Los Angeles",
+  lat:34.035, lon:-118.159, acreage:"small neighborhood lake",
+  desc:"A tucked-away neighborhood lake in Belvedere Park — a quick, no-frills stop if you're already in East LA and have an hour to spare.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Largemouth bass","Common carp"],
+  rigs:[
+    {s:"Trout", r:"Small floating PowerBait rig, light line, fished close to the bank right after a cold-season plant."},
+    {s:"Catfish", r:"Nightcrawler or cut bait on a simple bottom rig during warmer months."}
+  ],
+  spots:[
+    "Banks closest to the parking area get fish first after a stocking truck comes through",
+    "Quieter far side of the lake if the near bank is busy"
+  ],
+  amenities:["Picnic tables","Playground","Walking path"],
+  parking:"Free lot and street parking off Fickett St.",
+  tips:[
+    "Small enough to fish top-to-bottom in a single lunch break.",
+    "Not heavily featured online — often lighter foot traffic than the bigger-name LA lakes."
+  ],
+  stocking:"Trout: cooler months · Catfish: warmer months"
+},
+{
+  id:"reseda-park", name:"Reseda Park Lake", county:"LA", city:"Reseda",
+  lat:34.198, lon:-118.535, acreage:"2.5 acres",
+  desc:"A small, shallow San Fernando Valley pond in the north end of Reseda Park — about as low-commitment as urban fishing gets.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Small hook, light split shot, and PowerBait fished just off bottom — this shallow pond doesn't need much weight."},
+    {s:"Catfish", r:"Simple bottom rig with cut bait or nightcrawler in early summer."}
+  ],
+  spots:[
+    "Being small and shallow, there's no real \"secret\" bank — just fish soon after a stock, wherever there's room",
+    "Morning is noticeably more comfortable than afternoon; the pond has little shade"
+  ],
+  amenities:["Baseball diamond","Picnic tables","Playground"],
+  parking:"Free street parking around Reseda Park off Victory Blvd.",
+  tips:[
+    "One of the fastest in-and-out options in the Valley for a before-work or lunch-hour cast.",
+    "Because it's shallow, it warms (and fishes out) quickly after a trout plant — go early in the window."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring–early summer"
+},
+{
+  id:"santa-fe-reservoir", name:"Santa Fe Reservoir", county:"LA", city:"Irwindale",
+  lat:34.109, lon:-117.977, acreage:"80 acres",
+  desc:"A bigger reservoir inside Santa Fe Dam Recreation Area with grassy, shaded banks — more room to spread out than most San Gabriel Valley lakes.",
+  species:["Rainbow trout","Channel catfish","Largemouth bass"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig fished from any grassy bank soon after a winter plant."},
+    {s:"Catfish", r:"Bottom rig with liver or cut bait, fished into the evening in spring."}
+  ],
+  spots:[
+    "Shaded banks with picnic tables tend to sit right on decent bank-fishing water",
+    "Move a little further from the main day-use area for less-pressured water"
+  ],
+  amenities:["Shade trees","Picnic tables","Bike path","Restrooms"],
+  parking:"Small park entrance fee per vehicle at Santa Fe Dam Recreation Area off Arrow Hwy / Irwindale Ave.",
+  tips:[
+    "Good option if you want more elbow room than the smaller neighborhood ponds without driving all the way to Puddingstone.",
+    "Open year-round — worth a check even outside peak trout season for resident bass and catfish."
+  ],
+  stocking:"Trout: winter · Catfish: spring"
+},
+{
+  id:"downey-wilderness", name:"Downey Wilderness Park Lake", county:"LA", city:"Downey",
+  lat:33.940, lon:-118.133, acreage:"small park pond",
+  desc:"A compact, low-key pond in Wilderness Park — an easy after-work option in southeast LA County.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Common carp","Largemouth bass","Crappie"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig fished off any open bank during the stocking window."},
+    {s:"Warmwater mix", r:"Worm-and-bobber near shoreline brush covers bluegill and crappie; cut bait on the bottom for catfish and carp."}
+  ],
+  spots:[
+    "Small enough that there's no wrong bank — fish wherever there's open space and some shade",
+    "Try right at opening or the last hour before dusk to beat both foot traffic and heat"
+  ],
+  amenities:["Barbecue grills","Children's play area","Picnic tables","Restrooms"],
+  parking:"Free lot at Wilderness Park off Duke St.",
+  tips:[
+    "A genuinely quick stop — small enough to be worth it even with 30–40 minutes to spare.",
+    "Good backup when Independence or Furman Park areas are crowded."
+  ],
+  stocking:"Trout: late fall–early spring · warmwater species available year-round"
+},
+{
+  id:"magic-johnson", name:"Earvin Magic Johnson Park Lake", county:"LA", city:"Willowbrook (South LA)",
+  lat:33.920, lon:-118.264, acreage:"104-acre park",
+  desc:"A big, welcoming county park south of downtown LA, with a sizable lake and plenty of open shoreline.",
+  species:["Bluegill","Channel catfish","Crappie","Largemouth bass","Common carp"],
+  rigs:[
+    {s:"Bass/Catfish", r:"Plastic worm along the edges for bass; nightcrawler or cut bait on a bottom rig for catfish — this lake leans warmwater year-round rather than seasonal trout."},
+    {s:"Panfish", r:"Small jig or worm-and-bobber near any shaded structure for bluegill and crappie."}
+  ],
+  spots:[
+    "Structure near the shoreline (docks, brush) holds panfish consistently",
+    "Open banks on the quieter side of the lake, away from the main athletic fields"
+  ],
+  amenities:["Fitness course","Soccer fields","Picnic areas","Playground","Restrooms"],
+  parking:"Free lot off Ave of Champions.",
+  tips:[
+    "A dependable warmwater fishery you can hit any time of year, not just during a trout window.",
+    "Big enough to combine with a jog or fitness-course loop if you're squeezing in exercise too."
+  ],
+  stocking:"Warmwater fishery — check current CDFW schedule for any seasonal trout plants"
+},
+{
+  id:"cerritos-park", name:"Cerritos Park Lake (Don Knabe)", county:"LA", city:"Cerritos",
+  lat:33.876, lon:-118.067, acreage:"Don Knabe Community Regional Park",
+  desc:"A well-kept community park lake in Cerritos with skate park and playground next door — reliable, easy-access fishing near the 605.",
+  species:["Rainbow trout","Channel catfish","Bluegill","Crappie","Largemouth bass","Common carp"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig fished close to the bank soon after a cooler-season plant."},
+    {s:"Catfish", r:"Bottom rig with cut bait or liver during the warm season."}
+  ],
+  spots:[
+    "Open banks near the main parking area get fish first after a stock",
+    "Quieter corners away from the skate park draw less foot traffic"
+  ],
+  amenities:["Skate park","Playground","Barbecue grills","Picnic tables"],
+  parking:"Free lot at Don Knabe Community Regional Park off Bloomfield Ave.",
+  tips:[
+    "Hosts an annual CDFW youth fishing derby — good to know if you're bringing kids and want a built-in event.",
+    "Easy freeway access off the 605 makes this a solid after-work stop for southeast LA County."
+  ],
+  stocking:"Trout: cooler months · Catfish: warmer months"
+},
+{
+  id:"john-anson-ford", name:"John Anson Ford Park Lake", county:"LA", city:"Bell Gardens",
+  lat:33.968, lon:-118.151, acreage:"small pond",
+  desc:"A small pond inside a multi-sport and golf park in Bell Gardens, with paved trails right up to the water — about as convenient as bank access gets.",
+  species:["Channel catfish","Bluegill","Common carp"],
+  rigs:[
+    {s:"Catfish", r:"Nightcrawler or chicken liver on a simple bottom rig, most productive when the pond is freshly stocked in cooler weather."},
+    {s:"Panfish/Carp", r:"Bread or dough bait for carp; a small worm rig for bluegill along any shaded edge."}
+  ],
+  spots:[
+    "Paved trail sections give you a full loop of the pond in a few minutes — easy to scout before committing to a spot",
+    "Shaded edges nearest the golf course tend to be quieter"
+  ],
+  amenities:["Golf course","Paved walking trails","Picnic areas"],
+  parking:"Free lot off Park Lane.",
+  tips:[
+    "One of the most walkable, paved-access ponds on this whole list — great for a fast in-and-out with minimal setup.",
+    "Hosts the annual Bell Gardens Family Fishing Derby if you want to time a visit around it."
+  ],
+  stocking:"Catfish stocked in cooler weather; check current CDFW schedule"
+},
+{
+  id:"carr-park", name:"Carr Park Lake", county:"OC", city:"Huntington Beach",
+  lat:33.717, lon:-117.988, acreage:"small park lake",
+  desc:"A small, unassuming park lake at Heil Ave and Springdale St — quick, close-to-home fishing for west-side Huntington Beach.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig, fished right after a fall/winter plant."},
+    {s:"Catfish", r:"Simple bottom rig with cut bait in spring."}
+  ],
+  spots:[
+    "This pond is small enough that a lap around it takes minutes — just fish wherever looks freshest after a stock",
+    "Early morning beats the afternoon on this shade-light pond"
+  ],
+  amenities:["Picnic tables","Open lawn"],
+  parking:"Free street parking around the park at Heil Ave / Springdale St.",
+  tips:[
+    "About as low-commitment as OC fishing gets — good for a genuine 20–30 minute cast.",
+    "Not a destination lake, but handy if you already live or work nearby."
+  ],
+  stocking:"Trout: fall–winter · Catfish: spring"
+},
+{
+  id:"greer-park", name:"Greer Park Lake", county:"OC", city:"Huntington Beach",
+  lat:33.716, lon:-118.017, acreage:"small park lake",
+  desc:"Originally known as Brunswick Park Lake, this small pond off McFadden Ave is another easy, close-by option on the Huntington Beach west side.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig fished from any open bank soon after a plant."},
+    {s:"Catfish", r:"Bottom rig with liver or cut bait in warmer months."}
+  ],
+  spots:[
+    "Small pond — no real secret spot, just fish fresh water soon after a stocking truck comes through",
+    "Quiet enough on weekdays that timing matters more than location"
+  ],
+  amenities:["Picnic areas","Playground"],
+  parking:"Free street parking near McFadden Ave and Goldenwest St.",
+  tips:[
+    "A genuine sleeper — light crowds most days, good for a fast, low-key session.",
+    "Pair it with Carr Park Lake a short drive away if you want to try two spots in one outing."
+  ],
+  stocking:"Trout &amp; catfish stocked at times, in season — check current CDFW schedule"
+},
+{
+  id:"ralph-clark", name:"Ralph B. Clark Regional Park Lake", county:"OC", city:"Buena Park",
+  lat:33.868, lon:-117.998, acreage:"regional park lake",
+  desc:"A community lake inside Ralph B. Clark Regional Park, between Los Coyotes Country Club and the Coyote Hills — a solid midweek option in north-central OC.",
+  species:["Rainbow trout","Channel catfish"],
+  rigs:[
+    {s:"Trout", r:"Floating PowerBait rig fished from open banks during the late fall/winter plant."},
+    {s:"Catfish", r:"Bottom rig with cut bait through the warmer months."}
+  ],
+  spots:[
+    "Open banks close to the parking area for a quick in-and-out session",
+    "Quieter stretches further from the play area and sports fields"
+  ],
+  amenities:["Play area","Sports fields","Picnic tables","Walking paths"],
+  parking:"Free lot off Rosecrans Ave.",
+  tips:[
+    "Good after-work pick if you're anywhere near Buena Park or La Palma.",
+    "Less well-known than the South County lakes, so it's often less crowded right after a stock."
+  ],
+  stocking:"Trout: late fall–winter · Catfish: spring–fall"
+},
+{
+  id:"tri-city", name:"Tri-City Park Lake", county:"OC", city:"Placentia",
+  lat:33.884, lon:-117.847, acreage:"small urban lake",
+  desc:"Also known as Anaheim Union Reservoir, this small lake in Tri-City Regional Park is a quick, close-to-home option for north OC.",
+  species:["Rainbow trout","Channel catfish","Bluegill"],
+  rigs:[
+    {s:"Trout", r:"Floating bait rig fished soon after a late fall/winter plant."},
+    {s:"Catfish/Bluegill", r:"Bottom rig with bait for catfish; small worm-and-bobber for bluegill along the edges, both best in warmer months."}
+  ],
+  spots:[
+    "Small lake — a short walk covers the whole shoreline, so timing your visit near a stocking matters more than picking a specific bank",
+    "Shaded corners are more comfortable on hot afternoons"
+  ],
+  amenities:["Picnic areas","Playground","Sports courts"],
+  parking:"Free lot at Tri-City Park.",
+  tips:[
+    "A handy, low-traffic pick for a fast after-work cast in north Orange County.",
+    "Worth checking CDFW's live planting schedule since stocking here can be irregular year to year."
+  ],
+  stocking:"Trout: late fall–winter (as conditions allow) · Catfish: warmer months"
+}
+];
+
+/* ===================== STATE / HELPERS ===================== */
+let lastListView = 'home';
+let searchQuery = '';
+const COUNTY_LABEL = {LA:"Los Angeles County", OC:"Orange County"};
+const COUNTY_COLOR = {LA:"#1F4C4A", OC:"#B5871F"};
+
+/* Quick-tags: curated for anglers squeezing fishing into a tight schedule.
+   lunch  = small/simple enough to fish top-to-bottom on a lunch hour
+   after  = easy freeway/street access, good for a quick stop on the way home
+   weekend = bigger destination worth a longer weekend trip */
+const QUICK_TAGS = {
+  "echo-park":["lunch","after"], "macarthur-park":["lunch"], "lincoln-park":["lunch"],
+  "hollenbeck-park":["lunch"], "kenneth-hahn":["after"], "legg-lakes":["after","weekend"],
+  "el-dorado":["weekend"], "peck-road":["after"], "puddingstone":["weekend"],
+  "hansen-dam":["after"], "la-mirada":["after"], "alondra-park":["lunch","after"],
+  "irvine-lake":["weekend"], "irvine-regional":["weekend"], "yorba-regional":["after","weekend"],
+  "laguna-niguel":["weekend"], "mile-square":["after"], "eisenhower":["lunch","after"],
+  "huntington-central":["after","weekend"], "carbon-canyon":["weekend"], "centennial":["lunch"],
+  "laguna-lake-fullerton":["lunch"],
+  "belvedere":["lunch"], "reseda-park":["lunch"], "santa-fe-reservoir":["after","weekend"],
+  "downey-wilderness":["lunch","after"], "magic-johnson":["after"], "cerritos-park":["after"],
+  "john-anson-ford":["lunch"], "carr-park":["lunch"], "greer-park":["lunch"],
+  "ralph-clark":["after"], "tri-city":["after"]
+};
+const TAG_LABEL = {lunch:"⏱ Lunch break", after:"🌆 After work", weekend:"👨‍👩‍👧 Weekend trip"};
+
+function mapsUrl(lake){
+  const q = encodeURIComponent(lake.name + ", " + lake.city + ", CA");
+  return "https://www.google.com/maps/search/?api=1&query=" + q;
+}
+
+/* Rough session-length hint derived from the lake's stated size — not an
+   official figure, just a fast read on how much time to budget. */
+function sessionHint(lake){
+  const a = lake.acreage.toLowerCase();
+  const num = parseFloat(a);
+  if(a.includes('small') || a.includes('neighborhood') || a.includes('pond') || (num && num<=6)){
+    return "20–40 min covers it";
+  }
+  if(a.includes('700') || a.includes('250') || a.includes('reservoir') || (num && num>=100)){
+    return "Worth 2+ hours";
+  }
+  return "45–75 min session";
+}
+
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('nav.tabs button[data-tab]').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  if(['home','az','county'].includes(name)) lastListView = name;
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(window.trackEvent) window.trackEvent('view_tab', {tab_name:name});
+}
+
+function openLake(id){
+  const lake = LAKES.find(l=>l.id===id);
+  if(!lake) return;
+  renderDetail(lake);
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-detail').classList.add('active');
+  document.querySelectorAll('nav.tabs button[data-tab]').forEach(b=>b.classList.remove('active'));
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(window.trackEvent) window.trackEvent('view_lake', {lake_name:lake.name, county:lake.county});
+}
+
+function chip(text){ return `<span class="chip">${text}</span>`; }
+
+function lakeCardHtml(lake){
+  const tags = QUICK_TAGS[lake.id] || [];
+  return `<div class="lake-card" onclick="openLake('${lake.id}')">
+    <span class="county-flag" style="background:${COUNTY_COLOR[lake.county]}">${lake.county}</span>
+    <h4>${lake.name}</h4>
+    <div class="city">${lake.city}</div>
+    <div class="chips">${lake.species.slice(0,3).map(chip).join('')}</div>
+    <div class="tag-row">
+      <span class="time-badge">⏱ ${sessionHint(lake)}</span>
+      ${tags.map(t=>`<span class="time-badge" style="background:var(--gold)">${TAG_LABEL[t]}</span>`).join('')}
+    </div>
+  </div>`;
+}
+
+function matchesSearch(lake, q){
+  if(!q) return true;
+  q = q.toLowerCase();
+  const hay = [lake.name, lake.city, COUNTY_LABEL[lake.county], ...lake.species].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+
+function onSearchInput(val){
+  searchQuery = val.trim();
+  const wrap = document.getElementById('searchWrap');
+  wrap.classList.toggle('has-value', searchQuery.length>0);
+  renderHomeGrid();
+  renderAZ();
+  renderCounty();
+  if(searchQuery && !document.getElementById('view-az').classList.contains('active') &&
+     !document.getElementById('view-county').classList.contains('active')){
+    showView('home');
+  }
+}
+function clearSearch(){
+  document.getElementById('globalSearch').value = '';
+  onSearchInput('');
+}
+
+/* ===================== RENDER: HOME ===================== */
+function renderHome(){
+  document.getElementById('statTotal').textContent = LAKES.length;
+  renderHomeGrid();
+  renderQuickPicks();
+  renderMap('all');
+
+  const filters = [['all','All'],['LA','LA County'],['OC','Orange County']];
+  document.getElementById('mapFilters').innerHTML = filters.map(([k,label],i)=>
+    `<button class="${i===0?'active':''}" data-f="${k}" onclick="setMapFilter('${k}', this)">${label}</button>`).join('');
+}
+
+function renderHomeGrid(){
+  const list = LAKES.filter(l=>matchesSearch(l, searchQuery)).sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('homeCount').textContent = searchQuery
+    ? `${list.length} match${list.length===1?'':'es'} for "${searchQuery}"`
+    : `${list.length} lakes`;
+  document.getElementById('homeGrid').innerHTML = list.length
+    ? list.map(lakeCardHtml).join('')
+    : `<div class="no-results">No lakes match "${searchQuery}" — try a city, species, or lake name.</div>`;
+}
+
+function renderQuickPicks(){
+  const byTag = t => LAKES.filter(l=>(QUICK_TAGS[l.id]||[]).includes(t)).slice(0,3);
+  const groups = [
+    {icon:"⏱", title:"Lunch Break", sub:"in, cast, out — under an hour", tag:"lunch"},
+    {icon:"🌆", title:"After Work", sub:"easy access on the way home", tag:"after"},
+    {icon:"👨‍👩‍👧", title:"Weekend Trip", sub:"worth the longer drive", tag:"weekend"}
+  ];
+  document.getElementById('quickPicks').innerHTML = groups.map(g=>{
+    const lakes = byTag(g.tag);
+    return `<div class="qp-card">
+      <div class="qp-icon">${g.icon}</div>
+      <h4>${g.title}</h4>
+      <div class="qp-sub">${g.sub}</div>
+      <div class="qp-lakes">
+        ${lakes.map(l=>`<div class="qp-lake-link" onclick="openLake('${l.id}')"><span>${l.name}</span><span class="arrow">→</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setMapFilter(k, btn){
+  document.querySelectorAll('#mapFilters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMap(k);
+}
+
+/* ===================== RENDER: REGIONAL MAP (SVG) ===================== */
+function renderMap(filter){
+  const W=900,H=620, PAD=60;
+  const lonMin=-118.62, lonMax=-117.62, latMin=33.44, latMax=34.36;
+  function xy(lat,lon){
+    const x = PAD + (lon-lonMin)/(lonMax-lonMin) * (W-2*PAD);
+    const y = PAD + (latMax-lat)/(latMax-latMin) * (H-2*PAD);
+    return [x,y];
+  }
+  let svg = `<rect x="0" y="0" width="${W}" height="${H}" fill="#DCEFE9" rx="6"/>`;
+  // schematic coastline (Pacific edge, bottom-left leaning)
+  svg += `<path d="M0,${H} L0,${H-170} C120,${H-230} 200,${H-260} 260,${H-330} C320,${H-400} 300,${H-460} 380,${H-520} L${W},${H-560} L${W},${H} Z"
+    fill="#B9DCEB" opacity="0.6"/>`;
+  svg += `<text x="60" y="${H-60}" class="mono" font-size="12" fill="#3E7A93" font-family="JetBrains Mono, monospace">PACIFIC OCEAN</text>`;
+  // county divider (rough LA/OC line)
+  const [dx1,dy1]=xy(33.79,-118.62); const [dx2,dy2]=xy(33.79,-117.62);
+  svg += `<line x1="${dx1}" y1="${dy1-20}" x2="${dx2}" y2="${dy2+40}" stroke="#1B2E2C" stroke-dasharray="4 5" stroke-opacity="0.25"/>`;
+  svg += `<text x="${W-220}" y="${dy2+30}" class="mono" font-size="11" fill="#1B2E2C" opacity="0.4" font-family="JetBrains Mono, monospace">county line (approx.)</text>`;
+
+  const list = LAKES.filter(l=> filter==='all' ? true : l.county===filter);
+  list.forEach(lake=>{
+    const [x,y] = xy(lake.lat, lake.lon);
+    const color = COUNTY_COLOR[lake.county];
+    svg += `<g class="pin" onclick="openLake('${lake.id}')">
+      <circle class="body" cx="${x}" cy="${y}" r="6.5" fill="${color}" stroke="#FFFDF6" stroke-width="1.6"/>
+      <text x="${x+9}" y="${y+3}">${lake.name.replace(' Regional Park Lake',' Reg. Park').replace(' Lake','')}</text>
+    </g>`;
+  });
+  document.getElementById('regionMap').innerHTML = svg;
+}
+
+/* ===================== RENDER: A-Z ===================== */
+function renderAZ(){
+  const filtered = LAKES.filter(l=>matchesSearch(l, searchQuery));
+  document.getElementById('azCount').textContent = searchQuery
+    ? `${filtered.length} match${filtered.length===1?'':'es'} for "${searchQuery}"`
+    : `${filtered.length} lakes`;
+  const sorted = filtered.slice().sort((a,b)=>a.name.localeCompare(b.name));
+  if(!sorted.length){
+    document.getElementById('alphaJump').innerHTML = '';
+    document.getElementById('azList').innerHTML = `<div class="no-results">No lakes match "${searchQuery}" — try a city, species, or lake name.</div>`;
+    return;
+  }
+  const letters = [...new Set(sorted.map(l=>l.name[0].toUpperCase()))];
+  document.getElementById('alphaJump').innerHTML = letters.map(ch=>`<a href="#letter-${ch}">${ch}</a>`).join('');
+  let html='', lastLetter='';
+  sorted.forEach(lake=>{
+    const L = lake.name[0].toUpperCase();
+    let anchor='';
+    if(L!==lastLetter){ anchor = `<div id="letter-${L}"></div>`; lastLetter=L; }
+    const tags = QUICK_TAGS[lake.id] || [];
+    html += anchor + `<div class="alpha-row" onclick="openLake('${lake.id}')">
+      <div class="alr-letter">${L}</div>
+      <div style="flex:1;">
+        <div class="alr-name">${lake.name}</div>
+        <div class="tag-row">${tags.map(t=>`<span class="time-badge" style="background:var(--gold)">${TAG_LABEL[t]}</span>`).join('')}</div>
+      </div>
+      <div class="alr-meta">${lake.city}<br>${COUNTY_LABEL[lake.county]}</div>
+    </div>`;
+  });
+  document.getElementById('azList').innerHTML = html;
+}
+
+/* ===================== RENDER: COUNTY ===================== */
+function renderCounty(){
+  const filtered = LAKES.filter(l=>matchesSearch(l, searchQuery));
+  const la = filtered.filter(l=>l.county==='LA').sort((a,b)=>a.name.localeCompare(b.name));
+  const oc = filtered.filter(l=>l.county==='OC').sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('gridLA').innerHTML = la.length ? la.map(lakeCardHtml).join('') : `<div class="no-results">No LA County matches.</div>`;
+  document.getElementById('gridOC').innerHTML = oc.length ? oc.map(lakeCardHtml).join('') : `<div class="no-results">No Orange County matches.</div>`;
+}
+
+/* ===================== RENDER: DETAIL ===================== */
+function lakeDiagramSvg(lake){
+  // simple illustrative lake shape with numbered "best spot" markers (schematic, not literal GPS)
+  const seed = lake.id.length;
+  const cx=200, cy=110;
+  return `<svg class="lake-diagram" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="200" cy="110" rx="150" ry="80" fill="#1F4C4A" opacity="0.85"/>
+    <ellipse cx="200" cy="110" rx="150" ry="80" fill="none" stroke="#0F2A28" stroke-width="2"/>
+    ${[1,2,3].map((n,i)=>{
+      const angle = (seed*40 + i*130) * Math.PI/180;
+      const rx = 150*0.62, ry = 80*0.62;
+      const x = 200 + rx*Math.cos(angle);
+      const y = 110 + ry*Math.sin(angle);
+      return `<circle cx="${x}" cy="${y}" r="11" fill="#C1502E" stroke="#FFFDF6" stroke-width="2"/>
+        <text x="${x}" y="${y+4}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFFDF6">${n}</text>`;
+    }).join('')}
+    <text x="200" y="205" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#3E5450">schematic shoreline — numbers correspond to Best Spots list</text>
+  </svg>`;
+}
+
+function renderDetail(lake){
+  const html = `
+    <div class="detail-head">
+      <div>
+        <span class="county-tag" style="background:${COUNTY_COLOR[lake.county]}">${COUNTY_LABEL[lake.county]}</span>
+        <h2>${lake.name}</h2>
+        <div class="city">${lake.city}</div>
+        <p class="desc">${lake.desc}</p>
+        <div class="tag-row" style="margin-top:12px;">
+          <span class="time-badge">⏱ ${sessionHint(lake)}</span>
+          ${(QUICK_TAGS[lake.id]||[]).map(t=>`<span class="time-badge" style="background:var(--gold)">${TAG_LABEL[t]}</span>`).join('')}
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="${mapsUrl(lake)}" target="_blank" rel="noopener" onclick="if(window.trackEvent) window.trackEvent('get_directions', {lake_name:'${lake.name.replace(/'/g,"\\'")}'})">Get Directions</a>
+          <button class="btn btn-ghost" onclick="showView(lastListView||'home')">Back to list</button>
+        </div>
+      </div>
+      <div class="detail-facts">
+        <div><span class="k">Size</span><span>${lake.acreage}</span></div>
+        <div><span class="k">Session length</span><span>${sessionHint(lake)}</span></div>
+        <div><span class="k">Trout window</span><span>${lake.stocking.split('·')[0].replace('Trout:','').trim()}</span></div>
+        <div><span class="k">Catfish window</span><span>${(lake.stocking.split('·')[1]||'—').replace('Catfish:','').trim()}</span></div>
+        <div><span class="k">Hours</span><span>${lake.id==='irvine-lake' ? 'Posted lake hours (private)' : 'Dawn–dusk, typical park hours'}</span></div>
+        <div><span class="k">License required</span><span>Yes (16+)</span></div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="card">
+        <h4><span class="num">01</span> Best Spots on the Bank</h4>
+        ${lakeDiagramSvg(lake)}
+        <ul class="spot-list" style="margin-top:12px;">
+          ${lake.spots.map((s,i)=>`<li><span class="dotnum">${i+1}</span><span>${s}</span></li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4><span class="num">02</span> What's Swimming Here</h4>
+        <div class="species-list">${lake.species.map(s=>`<span class="species-tag">${s}</span>`).join('')}</div>
+        <h4 style="margin-top:16px;"><span class="num">03</span> Best Rigs</h4>
+        <ul class="rig-list">
+          ${lake.rigs.map(r=>`<li><b>${r.s}:</b> ${r.r}</li>`).join('')}
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4><span class="num">04</span> Parking</h4>
+        <p class="parking-text">${lake.parking}</p>
+      </div>
+
+      <div class="card">
+        <h4><span class="num">05</span> Amenities</h4>
+        <div class="amenity-list">${lake.amenities.map(a=>`<span class="amenity-pill">${a}</span>`).join('')}</div>
+      </div>
+
+      <div class="card full">
+        <h4><span class="num">★</span> Pro Tips</h4>
+        <div class="tip-box">
+          <ul>${lake.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('detailContent').innerHTML = html;
+}
+
+/* ===================== INIT ===================== */
+renderHome();
+renderAZ();
+renderCounty();
+document.querySelectorAll('nav.tabs button').forEach(b=>{
+  b.addEventListener('click', ()=>{ /* handled inline */ });
+});
+</script>
+</body>
+</html>
