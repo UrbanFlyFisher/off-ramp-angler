@@ -1,0 +1,15 @@
+{
+  "name": "Off-Ramp Angler — Urban Fishing Guide to LA & Orange County",
+  "short_name": "Off-Ramp",
+  "description": "A local, no-subscription fishing guide to 33 urban lakes across LA and Orange County — parking, species, rigs, and pro tips for anglers short on time.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#EFE6D2",
+  "theme_color": "#1F4C4A",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
